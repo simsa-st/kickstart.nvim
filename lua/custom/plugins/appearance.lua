@@ -22,4 +22,20 @@ return {
   },
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    opts = {},
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+    ft = { 'markdown', 'codecompanion' },
+  },
+  {
+    'ziontee113/icon-picker.nvim',
+    config = function()
+      require('icon-picker').setup { disable_legacy_commands = true }
+
+      local opts = { noremap = true, silent = true }
+
+      vim.keymap.set('i', '<C-i>', '<cmd>IconPickerInsert<cr>', opts)
+    end,
+  },
 }
