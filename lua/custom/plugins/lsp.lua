@@ -26,8 +26,10 @@ return {
       -- Useful status updates for LSP.
       { 'j-hui/fidget.nvim', opts = {} },
 
-      -- Allows extra capabilities provided by blink.cmp
-      'saghen/blink.cmp',
+      -- nvim-cmp recommended over blink.cmp online but might change in the future?
+      -- 'saghen/blink.cmp',
+      -- Allows extra capabilities provided by nvim-cmp
+      'hrsh7th/cmp-nvim-lsp',
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -196,7 +198,9 @@ return {
       --  By default, Neovim doesn't support everything that is in the LSP specification.
       --  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
       --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
-      local capabilities = require('blink.cmp').get_lsp_capabilities()
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+      -- local capabilities = require('blink.cmp').get_lsp_capabilities()
 
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -210,7 +214,29 @@ return {
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {
+          settings = {
+            pyright = {
+              disableOrganizeImports = true,
+            },
+            python = {
+              analysis = {
+                autoImportCompletions = true,
+                typeCheckingMode = 'off',
+                autoSearchPaths = true,
+                diagnosticMode = 'openFilesOnly',
+              },
+            },
+          },
+        },
+        ruff = {
+          on_attach = function(client, _)
+            if client.name == 'ruff' then
+              -- Disable hover in favor of Pyright
+              client.server_capabilities.hoverProvider = false
+            end
+          end,
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
