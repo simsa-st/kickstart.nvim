@@ -87,6 +87,22 @@ return {
           inline = { adapter = 'litellm' },
           cmd = { adapter = 'litellm' },
         },
+        strategies = {
+          chat = {
+            keymaps = {
+              toggle_autoscroll = {
+                modes = { n = '<leader>as' },
+                callback = function()
+                  local config = require 'codecompanion.config'
+                  config.display.chat.auto_scroll = not config.display.chat.auto_scroll
+                  local status = config.display.chat.auto_scroll and 'enabled' or 'disabled'
+                  vim.notify('CodeCompanion autoscroll ' .. status, vim.log.levels.INFO)
+                end,
+                description = 'Toggle CodeCompanion autoscroll',
+              },
+            },
+          },
+        },
         extensions = {
           mcphub = {
             callback = 'mcphub.extensions.codecompanion',
