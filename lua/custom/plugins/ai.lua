@@ -20,49 +20,9 @@ return {
     },
     config = function()
       require('codecompanion').setup {
-        default_adapter = 'litellm',
+        default_adapter = 'personal_openai_gpt5',
         adapters = {
           http = {
-            litellm = function()
-              local openai = require 'codecompanion.adapters.http.openai'
-              local adapter_utils = require 'codecompanion.utils.adapters'
-              return require('codecompanion.adapters').extend('openai_compatible', {
-                name = 'litellm',
-                formatted_name = 'LiteLLM',
-                schema = {
-                  model = {
-                    -- This should match the 'model_name' defined in litellm_config.yaml
-                    default = 'local-qwen-3',
-                  },
-                },
-                env = { url = 'http://localhost:11436' },
-                handlers = {
-                  chat_output = function(self, data, tools)
-                    -- Call parent handler first
-                    local result = openai.handlers.chat_output(self, data, tools)
-                    if not result then
-                      return nil
-                    end
-
-                    -- Extract reasoning_content from LiteLLM response
-                    -- See: https://docs.litellm.ai/docs/reasoning_content
-                    local data_mod = type(data) == 'table' and data.body or adapter_utils.clean_streamed_data(data)
-                    local ok, json = pcall(vim.json.decode, data_mod, { luanil = { object = true } })
-                    if ok and json.choices and #json.choices > 0 then
-                      local delta = self.opts.stream and json.choices[1].delta or json.choices[1].message
-                      if delta and delta.reasoning_content then
-                        result.output.reasoning = { content = delta.reasoning_content }
-                        if result.output.content == '' then
-                          result.output.content = nil
-                        end
-                      end
-                    end
-
-                    return result
-                  end,
-                },
-              })
-            end,
             personal_openai_gpt5 = function()
               return require('codecompanion.adapters').extend('openai', {
                 schema = {
@@ -83,9 +43,9 @@ return {
           },
         },
         interactions = {
-          chat = { adapter = 'litellm' },
-          inline = { adapter = 'litellm' },
-          cmd = { adapter = 'litellm' },
+          chat = { adapter = 'personal_openai_gpt5' },
+          inline = { adapter = 'personal_openai_gpt5' },
+          cmd = { adapter = 'personal_openai_gpt5' },
         },
         strategies = {
           chat = {
