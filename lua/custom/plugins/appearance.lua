@@ -29,6 +29,29 @@ return {
     ft = { 'markdown' },
   },
   {
+    'jakewvincent/mkdnflow.nvim',
+    ft = 'markdown',
+    config = function()
+      require('mkdnflow').setup {
+        modules = {
+          completion = true, -- Off by default; needed to register the nvim-cmp source.
+        },
+        mappings = {
+          MkdnGoBack = false,
+          MkdnGoForward = false,
+          MkdnMoveSource = false,
+          MkdnIncreaseHeading = false,
+          MkdnDecreaseHeading = false,
+          MkdnToggleToDo = { { 'n', 'v' }, '<leader>tt' },
+          MkdnUpdateNumbering = false,
+        },
+        perspective = {
+          priority = 'current',
+        },
+      }
+    end,
+  },
+  {
     'ziontee113/icon-picker.nvim',
     config = function()
       require('icon-picker').setup { disable_legacy_commands = true }

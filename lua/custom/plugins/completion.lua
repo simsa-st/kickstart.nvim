@@ -124,6 +124,7 @@ return {
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+          { name = 'mkdnflow' },
         },
       } -- `/` cmdline setup.
       cmp.setup.cmdline('/', {
