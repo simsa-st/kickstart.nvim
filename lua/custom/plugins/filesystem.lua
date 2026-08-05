@@ -10,7 +10,33 @@ return {
     -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
     lazy = false,
     config = function()
-      require('oil').setup()
+      require('oil').setup {
+        keymaps = {
+          ['gS'] = {
+            callback = function()
+              local oil = require 'oil'
+              local config = require 'oil.config'
+              local has_size = false
+
+              -- Check if size is already in columns
+              for _, col in ipairs(config.columns) do
+                if type(col) == 'string' and col == 'size' then
+                  has_size = true
+                  break
+                end
+              end
+
+              -- Toggle the size column
+              if has_size then
+                oil.set_columns { 'icon' } -- Minimal view
+              else
+                oil.set_columns { 'icon', 'permissions', 'size', 'mtime' } -- Detailed view
+              end
+            end,
+            desc = 'Toggle file detail view',
+          },
+        },
+      }
       vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
     end,
   },
