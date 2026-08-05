@@ -30,6 +30,8 @@ vim.o.showmode = false
 --  See `:help 'clipboard'`
 vim.schedule(function()
   vim.o.clipboard = 'unnamedplus'
+  -- Opt-in network clipboard; a no-op unless LEMONADE_HOST_IP is set.
+  require('custom.lemonade-clipboard').setup()
 end)
 
 -- Use spaces
