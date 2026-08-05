@@ -13,4 +13,9 @@ return {
     },
   },
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  {
+    'sindrets/diffview.nvim',
+    -- The remaining Diffview* commands are only reachable once a view is open.
+    cmd = { 'DiffviewOpen', 'DiffviewFileHistory' },
+  },
 }
